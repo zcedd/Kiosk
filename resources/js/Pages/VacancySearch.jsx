@@ -2,6 +2,11 @@ import { router } from "@inertiajs/react";
 import { useState, useEffect } from "react";
 import AnnouncementItem from "@/Components/AnnouncementItem";
 import VacancyModal from "@/Components/VacancyModal";
+import SpecializationDropdown from "@/Components/SpecializationDropdown";
+import JobTypeDropdown from "@/Components/JobTypeDropdown";
+import SalaryFromDropdown from "@/Components/SalaryFromDropdown";
+import SalaryToDropdown from "@/Components/SalaryToDropdown";
+import PostedDateDropdown from "@/Components/PostedDateDropdown";
 
 export default function VacancySearch({ vacancies, search, activities }) {
     const [showQR, setShowQR] = useState(null);
@@ -31,13 +36,13 @@ export default function VacancySearch({ vacancies, search, activities }) {
 
     return (
         <div className="flex h-screen bg-white overflow-hidden">
-            {/* LEFT COLUMN – Announcements */}
+            {/* LEFT COLUMN – Announcements + Filters */}
             <div
                 className="flex flex-col border-r border-slate-300 p-4 flex-shrink-0"
                 style={{ width: "25%" }}
             >
                 {/* Logo + Search */}
-                <div className="flex-shrink-0 mb-3">
+                <div className="flex-shrink-0 mb-4">
                     <img
                         className="h-[60px] mx-auto mb-4"
                         src="./images/work.png"
@@ -57,8 +62,58 @@ export default function VacancySearch({ vacancies, search, activities }) {
                     />
                 </div>
 
+                {/* Filters */}
+                <div className="flex flex-wrap gap-2 px-2 mb-4">
+                    <SpecializationDropdown
+                        specializations={filters.specialization}
+                        onChange={(selectedIds) =>
+                            setFilters((prev) => ({
+                                ...prev,
+                                specialization: selectedIds,
+                            }))
+                        }
+                    />
+                    <JobTypeDropdown
+                        value={filters.job_type}
+                        onChange={(selectedType) =>
+                            setFilters((prev) => ({
+                                ...prev,
+                                job_type: selectedType,
+                            }))
+                        }
+                    />
+                    <SalaryFromDropdown
+                        value={filters.salary_from}
+                        onChange={(value) =>
+                            setFilters((prev) => ({
+                                ...prev,
+                                salary_from: value,
+                            }))
+                        }
+                    />
+                    <SalaryToDropdown
+                        value={filters.salary_to}
+                        onChange={(value) =>
+                            setFilters((prev) => ({
+                                ...prev,
+                                salary_to: value,
+                            }))
+                        }
+                        salaryFrom={filters.salary_from}
+                    />
+                    <PostedDateDropdown
+                        value={filters.posted_date}
+                        onChange={(value) =>
+                            setFilters((prev) => ({
+                                ...prev,
+                                posted_date: value,
+                            }))
+                        }
+                    />
+                </div>
+
                 {/* Announcements Header */}
-                <h1 className="text-xl font-bold ml-3 flex items-center gap-2 mb-2 text-[#074797]">
+                <h1 className="text-xl font-bold flex items-center gap-2 mb-2 text-[#074797]">
                     <img
                         src="./images/horn.png"
                         alt="horn"
@@ -172,7 +227,7 @@ export default function VacancySearch({ vacancies, search, activities }) {
                 className="flex flex-col flex-shrink-0 border-l border-slate-300 p-4"
                 style={{ width: "30%" }}
             >
-                <h2 className="text-xl font-bold mb-4 text-[#074797]">
+                <h2 className="text-xl font-bold mb-2 text-[#074797]">
                     Citizens Charter
                 </h2>
                 <embed
