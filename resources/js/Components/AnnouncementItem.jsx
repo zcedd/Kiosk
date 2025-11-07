@@ -13,11 +13,11 @@ export default function AnnouncementItem({ activity }) {
     return (
         <div className="text-sm text-gray-800 border-b border-gray-200 pb-4 mb-3">
             {/* Type */}
-            <div className="px-14 font-extrabold mb-4">{activity.type}</div>
+            <div className="px-8 font-extrabold mb-4">{activity.type}</div>
 
             {/* Companies */}
             {companies.length > 0 && (
-                <div className="px-14 text-xs text-gray-500 mb-2">
+                <div className="px-8 text-xs text-gray-500 mb-2">
                     Companies:
                     <div className="flex flex-wrap gap-2 mt-1">
                         {companies.map((company, idx) => (
@@ -33,7 +33,7 @@ export default function AnnouncementItem({ activity }) {
             )}
 
             {/* Dates + Venue */}
-            <div className="px-14 text-xs text-gray-500 mt-3 space-y-1">
+            <div className="px-8 text-xs text-gray-500 mt-3 space-y-1">
                 <div className="flex items-center space-x-1 mb-1">
                     <FaRegCalendarCheck className="text-blue-500" size={18} />
                     <span className="text-xs font-semibold">

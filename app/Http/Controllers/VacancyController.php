@@ -19,7 +19,7 @@ class VacancyController extends Controller
         $salaryTo = $request->input('salary_to');
         $postedDate = $request->input('posted_date');
 
-        // Specializations with subs
+        // Load Specializations with their subSpecializations
         $specializations = Specialization::with('subSpecializations')->get()
             ->mapWithKeys(function($spec) {
                 return [
@@ -27,7 +27,7 @@ class VacancyController extends Controller
                 ];
             });
 
-        // Activities (only with companies)
+        // Load Activities with associated companies
         $activities = DB::table('recruitment_activities')
             ->select(
                 'recruitment_activities.id',
@@ -59,14 +59,17 @@ class VacancyController extends Controller
                 'recruitment_activities.details'
             )
             ->orderBy('recruitment_activities.created_at', 'desc')
-            ->limit(4)
+            ->limit(6)
             ->get();
 
-        // Vacancies
+        // Load Vacancies with filters
         $vacancies = Vacancy::with('company')
             ->when($search, function ($query, $search) {
-                $query->where('title', 'like', "%{$search}%")
-                      ->orWhereHas('company', fn($q) => $q->where('name', 'like', "%{$search}%"));
+                
+                $query->where(function($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%")
+                      ->orWhereHas('company', fn($q2) => $q2->where('name', 'like', "%{$search}%"));
+                });
             })
             ->when(!empty($specializationsFilter), fn($query) => $query->whereIn('sub_specialization_id', $specializationsFilter))
             ->when($jobType && $jobType !== 'All Types', function ($q) use ($jobType) {
@@ -91,18 +94,20 @@ class VacancyController extends Controller
                 };
                 if ($days) $q->where('created_at', '>=', now()->subDays($days));
             })
+            ->orderBy('created_at', 'desc')
+            ->limit(12)
             ->get();
 
         return Inertia::render('VacancySearch', [
-            'vacancies'        => $vacancies,
-            'activities'       => $activities,
-            'filters'          => [
-                'search'          => $search,
+            'vacancies' => $vacancies,
+            'activities' => $activities,
+            'filters' => [
+                'search' => $search,
                 'specializations' => $specializationsFilter,
-                'job_type'        => $jobType,
-                'salary_from'     => $salaryFrom,
-                'salary_to'       => $salaryTo,
-                'posted_date'     => $postedDate,
+                'job_type' => $jobType,
+                'salary_from' => $salaryFrom,
+                'salary_to' => $salaryTo,
+                'posted_date' => $postedDate,
             ],
             'specializations' => $specializations,
         ]);

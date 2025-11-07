@@ -6,24 +6,6 @@ import Backdrop from "@mui/material/Backdrop";
 import QRCode from "react-qr-code";
 import Typography from "@mui/material/Typography";
 
-const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    bgcolor: "background.paper",
-    border: "none",
-    outline: "none",
-    borderRadius: "12px",
-    boxShadow: 24,
-    maxWidth: "700px",
-    width: "95%",
-    maxHeight: "95vh",
-    display: "flex",
-    flexDirection: "column",
-    overflow: "hidden",
-};
-
 export default function VacancyModal({ showQR, setShowQR, toTitleCase }) {
     const handleClose = () => setShowQR(null);
 
@@ -49,16 +31,22 @@ export default function VacancyModal({ showQR, setShowQR, toTitleCase }) {
             disableScrollLock
         >
             <Fade in={!!showQR}>
-                <Box sx={style}>
-                    <div className="flex justify-between px-4 py-3 bg-white sticky top-0 z-10">
+                <Box
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
+               bg-white border-4 border-[#074797] rounded-xl shadow-lg 
+               max-w-[500px] w-[90%] max-h-[95vh] flex flex-col overflow-hidden"
+                >
+                    <div className="flex justify-between px-4 py-3   bg-white sticky top-0 z-10">
                         <Typography
                             variant="h6"
                             component="h2"
                             className="flex-1 pr-4 leading-snug"
                         >
-                            <span className="uppercase">{showQR?.title}</span> –{" "}
-                            <span>
-                                {toTitleCase(showQR?.company?.name || "")}
+                            <span className="uppercase text-[#084896]">
+                                {showQR?.title}
+                            </span>{" "}
+                            <span className="text-[#084896]">
+                                ({toTitleCase(showQR?.company?.name || "")})
                             </span>
                         </Typography>
                         <svg

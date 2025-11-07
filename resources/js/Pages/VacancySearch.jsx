@@ -2,22 +2,9 @@ import { router } from "@inertiajs/react";
 import { useState, useEffect } from "react";
 import AnnouncementItem from "@/Components/AnnouncementItem";
 import VacancyModal from "@/Components/VacancyModal";
-import JobTypeDropdown from "@/Components/JobTypeDropdown";
-import SalaryFromDropdown from "@/Components/SalaryFromDropdown";
-import SalaryToDropdown from "@/Components/SalaryToDropdown";
-import PostedDateDropdown from "@/Components/PostedDateDropdown";
-
-import SpecializationDropdown from "@/Components/SpecializationDropdown";
 
 export default function VacancySearch({ vacancies, search, activities }) {
-    const [query, setQuery] = useState(search || "");
     const [showQR, setShowQR] = useState(null);
-    const [specializations, setSpecializations] = useState([]);
-    const [jobType, setJobType] = useState("");
-    const [salaryFrom, setSalaryFrom] = useState("");
-    const [salaryTo, setSalaryTo] = useState("");
-    const [postedDate, setPostedDate] = useState("");
-
     const [filters, setFilters] = useState({
         search: "",
         specialization: [],
@@ -31,7 +18,6 @@ export default function VacancySearch({ vacancies, search, activities }) {
         const delay = setTimeout(() => {
             router.get("/", filters, { preserveState: true, replace: true });
         }, 400);
-
         return () => clearTimeout(delay);
     }, [filters]);
 
@@ -44,235 +30,157 @@ export default function VacancySearch({ vacancies, search, activities }) {
     }
 
     return (
-        <div className="flex flex-col md:flex-row min-h-screen  p-6 gap-6 bg-white ">
-            {/* Left Column */}
-            <div className="w-20 md:w-1/3 border-r-2 border-r-slate-300 pr-3 fixed top-0 left-0 h-screen flex flex-col bg-white">
-                {/* Search Bar */}
-                <div className="px-5 py-3 border-slate-300 rounded-2xl bg-white mb-2 select-none">
+        <div className="flex h-screen bg-white overflow-hidden">
+            {/* LEFT COLUMN – Announcements */}
+            <div
+                className="flex flex-col border-r border-slate-300 p-4 flex-shrink-0"
+                style={{ width: "25%" }}
+            >
+                {/* Logo + Search */}
+                <div className="flex-shrink-0 mb-3">
                     <img
-                        className="h-[60px] w-auto mb-4 mx-auto"
+                        className="h-[60px] mx-auto mb-4"
                         src="./images/work.png"
                         alt="logo"
                     />
-
-                    <div className="relative">
-                        <input
-                            type="text"
-                            placeholder="Search job vacancies..."
-                            value={filters.search}
-                            onChange={(e) =>
-                                setFilters((prev) => ({
-                                    ...prev,
-                                    search: e.target.value,
-                                }))
-                            }
-                            autoComplete="off"
-                            className="w-full text-[#074797] rounded-full px-4 py-3 border-2 border-gray-300 focus:outline-none focus:border-[#074797] shadow-sm"
-                        />
-
-                        {filters.search && (
-                            <svg
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width={19}
-                                height={19}
-                                onClick={() =>
-                                    setFilters((prev) => ({
-                                        ...prev,
-                                        search: "",
-                                    }))
-                                }
-                                className="cursor-pointer text-gray-500 absolute right-3 top-1/2 -translate-y-1/2 hover:scale-110 transition hover:text-[#074797]"
-                            >
-                                <path d="M4.293,18.293,10.586,12,4.293,5.707A1,1,0,0,1,5.707,4.293L12,10.586l6.293-6.293a1,1,0,1,1,1.414,1.414L13.414,12l6.293,6.293a1,1,0,1,1-1.414,1.414L12,13.414,5.707,19.707a1,1,0,0,1-1.414-1.414Z"></path>
-                            </svg>
-                        )}
-                    </div>
-                </div>
-                {/* Filters */}
-                <div className="flex flex-wrap gap-2 px-6 mb-5 select-none">
-                    <SpecializationDropdown
-                        specializations={filters.specialization}
-                        onChange={(selectedIds) =>
+                    <input
+                        type="text"
+                        placeholder="Search job vacancies..."
+                        value={filters.search}
+                        onChange={(e) =>
                             setFilters((prev) => ({
                                 ...prev,
-                                specialization: selectedIds,
+                                search: e.target.value,
                             }))
                         }
-                    />
-
-                    <JobTypeDropdown
-                        value={filters.job_type}
-                        onChange={(selectedType) => {
-                            console.log("Filtering by jobType:", selectedType);
-                            setFilters((prev) => ({
-                                ...prev,
-                                job_type: selectedType,
-                            }));
-                        }}
-                    />
-
-                    <SalaryFromDropdown
-                        value={filters.salary_from}
-                        onChange={(value) =>
-                            setFilters((prev) => ({
-                                ...prev,
-                                salary_from: value,
-                            }))
-                        }
-                    />
-
-                    <SalaryToDropdown
-                        value={filters.salary_to}
-                        onChange={(value) =>
-                            setFilters((prev) => ({
-                                ...prev,
-                                salary_to: value,
-                            }))
-                        }
-                        salaryFrom={filters.salary_from}
-                    />
-
-                    <PostedDateDropdown
-                        value={filters.posted_date}
-                        onChange={(value) =>
-                            setFilters((prev) => ({
-                                ...prev,
-                                posted_date: value,
-                            }))
-                        }
+                        className="w-full text-[#074797] rounded-full px-4 py-3 border-2 border-gray-300 focus:outline-none focus:border-[#074797] shadow-sm"
                     />
                 </div>
 
-                {/* Announcements + Footer */}
-                <div className="bg-white  rounded-2xl border-slate-300 flex-1 flex flex-col min-h-0 select-none">
-                    <h1 className="text-2xl px-4 font-bold mb-5 flex-shrink-0 flex items-center gap-2">
-                        <img
-                            src="./images/horn.png"
-                            alt="announcement icon"
-                            className="h-8 w-8"
-                        />
-                        Announcements
-                    </h1>
+                {/* Announcements Header */}
+                <h1 className="text-xl font-bold ml-3 flex items-center gap-2 mb-2 text-[#074797]">
+                    <img
+                        src="./images/horn.png"
+                        alt="horn"
+                        className="h-6 w-6"
+                    />
+                    Announcements
+                </h1>
 
-                    {/* announcements */}
-                    <div className="space-y-3 overflow-y-auto flex-1 min-h-0 pr-2">
-                        {activities.length === 0 ? (
-                            <p className="text-gray-500 text-center text-sm">
-                                No announcements yet.
-                            </p>
-                        ) : (
-                            activities.map((a) => (
-                                <AnnouncementItem key={a.id} activity={a} />
-                            ))
-                        )}
-                    </div>
-
-                    {/* Footer */}
-                    <div className="mt-2 pt-2  border-slate-300 text-center">
-                        {/* Logos */}
-                        <div className="flex justify-center items-center gap-6 mb-1">
-                            <img
-                                src="./images/bagong-pilipinas.png"
-                                alt="Logo 1"
-                                className="h-[60px] w-15"
-                            />
-                            <img
-                                src="./images/logo.png"
-                                alt="Logo 2"
-                                className="h-10 w-auto"
-                            />
-                            <img
-                                src="./images/peso.png"
-                                alt="Logo 3"
-                                className="h-[50px] w-auto"
-                            />
-                        </div>
-
-                        {/* Text */}
-                        <p className="text-xs text-[#074797] pb-3">
-                            Powered by the Information Technology Office.
+                {/* Announcements List (scrollable) */}
+                <div className="flex-1 overflow-y-auto space-y-3 pr-1">
+                    {activities.length === 0 ? (
+                        <p className="text-gray-500 text-center text-sm">
+                            No announcements yet.
                         </p>
+                    ) : (
+                        activities.map((a) => (
+                            <AnnouncementItem key={a.id} activity={a} />
+                        ))
+                    )}
+                </div>
+
+                {/* Footer Logos */}
+                <div className="flex-shrink-0 pt-3 text-center border-t mt-3">
+                    <div className="flex justify-center items-center gap-4 mb-2">
+                        <img
+                            src="./images/bagong-pilipinas.png"
+                            className="h-[50px]"
+                        />
+                        <img src="./images/logo.png" className="h-[40px]" />
+                        <img src="./images/peso.png" className="h-[50px]" />
                     </div>
+                    <p className="text-xs text-[#074797]">
+                        Powered by the Information Technology Office.
+                    </p>
                 </div>
             </div>
 
-            {/* Right Column */}
-            <div className="w-full ml-[35%] scrollable ">
-                {vacancies.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center min-h-[80vh]">
-                        <img
-                            src="./images/page-not-found.png"
-                            alt="No vacancies"
-                            className="h-32 w-32 mb-4"
-                        />
-                        <p className="text-gray-500 text-lg font-medium">
-                            No vacancies found.
-                        </p>
-                    </div>
-                ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {vacancies.map((vacancy) => (
-                            <div
-                                key={vacancy.id}
-                                className="p-6 border rounded-2xl shadow-lg border-slate-200 bg-white flex flex-col justify-between h-full ransition-all duration-300 hover:shadow-[0_0_30px_rgba(7,71,151,0.5)] select-none"
-                                onClick={() => setShowQR(vacancy)}
-                            >
-                                <div className="flex flex-col items-center">
-                                    {/* Logo */}
-                                    {vacancy.company?.logo && (
-                                        <div className="w-16 h-16 mb-4 flex items-center justify-center rounded-lg">
-                                            <img
-                                                src={`https://workinilocosnorte.ph/storage/company/${vacancy.company.logo}`}
-                                                alt={vacancy.company.name}
-                                                className="w-full h-full object-contain"
-                                                onError={(e) => {
-                                                    e.currentTarget.onerror =
-                                                        null;
-                                                    e.currentTarget.src =
-                                                        "https://kiosk.workinilocosnorte.ph/images/work.png";
-                                                }}
-                                            />
-                                        </div>
-                                    )}
-
-                                    {/* Title */}
-                                    <h3 className="font-semibold text-md mb-1 text-center">
-                                        {vacancy.title}
-                                    </h3>
-
-                                    {/* Company */}
-                                    <p className="text-sm text-gray-600 mb-4 text-center">
-                                        {vacancy.company?.name ||
-                                            "Unknown Company"}
-                                    </p>
-
-                                    {/* Salary */}
-                                    <p className="text-sm font-semibold text-gray-600 mb-4 text-center">
-                                        {vacancy.salary_from &&
-                                        vacancy.salary_to
-                                            ? `₱${vacancy.salary_from.toLocaleString()} - ₱${vacancy.salary_to.toLocaleString()}`
-                                            : "Salary not specified"}
-                                    </p>
-                                </div>
-
-                                {/* Button */}
-                                <button
-                                    className="mt-2 px-2 py-2 w-full bg-[#074797] text-white text-[13px] rounded hover:bg-[#0a2e59] transition flex items-center justify-center gap-2"
+            {/* MIDDLE COLUMN – Job Cards */}
+            <div
+                className="flex flex-col flex-grow overflow-y-auto p-4 border-r border-slate-300"
+                style={{ width: "40%" }}
+            >
+                <h2 className="text-xl font-bold text-[#074797] mb-3">
+                    Job Vacancies
+                </h2>
+                <div className="flex-1 overflow-y-auto pr-1">
+                    {vacancies.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center text-gray-500 h-full">
+                            <img
+                                src="./images/page-not-found.png"
+                                className="h-24 w-24 mb-3"
+                                alt="none"
+                            />
+                            <p>No vacancies found.</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {vacancies.map((vacancy) => (
+                                <div
+                                    key={vacancy.id}
+                                    className="p-4 border rounded-2xl shadow-md bg-white hover:shadow-[0_0_20px_rgba(7,71,151,0.3)] transition-all duration-300"
                                     onClick={() => setShowQR(vacancy)}
                                 >
-                                    More Details
-                                    <img
-                                        src="./images/press.png"
-                                        alt="icon"
-                                        className="h-5 w-5"
-                                    />
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                )}
+                                    <div className="flex flex-col items-center text-center">
+                                        <img
+                                            src={
+                                                vacancy.company?.logo
+                                                    ? `https://workinilocosnorte.ph/storage/company/${vacancy.company.logo}`
+                                                    : "/images/work.png"
+                                            }
+                                            onError={(e) =>
+                                                (e.currentTarget.src =
+                                                    "/images/work.png")
+                                            }
+                                            className="w-16 h-16 mb-3 object-contain"
+                                            alt="logo"
+                                        />
+                                        <h3 className="font-semibold">
+                                            {vacancy.title}
+                                        </h3>
+                                        <p className="text-gray-600 text-sm">
+                                            {vacancy.company?.name ||
+                                                "Unknown Company"}
+                                        </p>
+                                        <p className="text-gray-700 text-sm font-semibold mt-2">
+                                            {vacancy.salary_from &&
+                                            vacancy.salary_to
+                                                ? `₱${vacancy.salary_from.toLocaleString()} - ₱${vacancy.salary_to.toLocaleString()}`
+                                                : "Salary not specified"}
+                                        </p>
+                                    </div>
+                                    <button
+                                        className="mt-3 px-3 py-2 w-full bg-[#074797] text-white text-sm rounded hover:bg-[#0a2e59] flex items-center justify-center gap-2"
+                                        onClick={() => setShowQR(vacancy)}
+                                    >
+                                        More Details
+                                        <img
+                                            src="./images/press.png"
+                                            className="h-4 w-4"
+                                        />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* RIGHT COLUMN  */}
+            <div
+                className="flex flex-col flex-shrink-0 border-l border-slate-300 p-4"
+                style={{ width: "30%" }}
+            >
+                <h2 className="text-xl font-bold mb-4 text-[#074797]">
+                    Citizens Charter
+                </h2>
+                <embed
+                    src="/files/Citizens-charter2k25.pdf"
+                    type="application/pdf"
+                    className="w-full h-[90vh] rounded border"
+                    title="Charter PDF"
+                />
             </div>
 
             <VacancyModal
