@@ -242,11 +242,11 @@ export default function VacancySearch({ vacancies, activities }) {
                     <h2 className="text-xl font-bold mb-2 text-[#074797]">
                         Citizens Charter
                     </h2>
+
                     <embed
-                        src="/files/Citizens-charter2k25.pdf"
-                        type="application/pdf"
-                        className="w-full h-[90vh] rounded border"
-                        title="Charter PDF"
+                        src="/files/Citizens-charter2k25.pdf#toolbar=0"
+                        className="w-full h-[95vh] border rounded"
+                        title="Citizens Charter"
                     />
                 </div>
             )}
