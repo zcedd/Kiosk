@@ -9,7 +9,7 @@ class Company extends Model
 {
     use HasFactory;
 
-    protected $table = 'companies'; // make sure this matches your DB table name
+    protected $table = 'companies'; 
 
     protected $fillable = [
         'name',

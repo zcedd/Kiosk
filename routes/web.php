@@ -1,13 +1,16 @@
 <?php
 
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VacancyController;
-use App\Http\Controllers\RecruitmentActivityController;
+use Illuminate\Support\Facades\Route;
 
 
 
-Route::get('/', [VacancyController::class, 'index'])->name('vacancies.index');
+Route::get('/withcharter', [VacancyController::class, 'index'])->name('vacancies.withcharter');
+Route::get('/withoutcharter', [VacancyController::class, 'index'])->name('vacancies.withoutcharter');
+
+
+
+
 
 
 

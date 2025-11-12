@@ -1,4 +1,4 @@
-import { router } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 import { useState, useEffect } from "react";
 import AnnouncementItem from "@/Components/AnnouncementItem";
 import VacancyModal from "@/Components/VacancyModal";
@@ -8,10 +8,13 @@ import SalaryFromDropdown from "@/Components/SalaryFromDropdown";
 import SalaryToDropdown from "@/Components/SalaryToDropdown";
 import PostedDateDropdown from "@/Components/PostedDateDropdown";
 
-export default function VacancySearch({ vacancies, search, activities }) {
+export default function VacancySearch({ vacancies, activities }) {
+    const { url } = usePage();
+    const initialShowCharter = url.includes("/withcharter");
+    const [showCharter] = useState(initialShowCharter);
+
     const [showQR, setShowQR] = useState(null);
     const [filters, setFilters] = useState({
-        search: "",
         specialization: [],
         job_type: "",
         salary_from: "",
@@ -21,10 +24,11 @@ export default function VacancySearch({ vacancies, search, activities }) {
 
     useEffect(() => {
         const delay = setTimeout(() => {
-            router.get("/", filters, { preserveState: true, replace: true });
+            const route = showCharter ? "/withcharter" : "/withoutcharter";
+            router.get(route, filters, { preserveState: true, replace: true });
         }, 400);
         return () => clearTimeout(delay);
-    }, [filters]);
+    }, [filters, showCharter]);
 
     function toTitleCase(str) {
         if (!str) return "";
@@ -122,7 +126,7 @@ export default function VacancySearch({ vacancies, search, activities }) {
                     Announcements
                 </h1>
 
-                {/* Announcements List (scrollable) */}
+                {/* Announcements List */}
                 <div className="flex-1 overflow-y-auto space-y-3 pr-1">
                     {activities.length === 0 ? (
                         <p className="text-gray-500 text-center text-sm">
@@ -151,10 +155,11 @@ export default function VacancySearch({ vacancies, search, activities }) {
                 </div>
             </div>
 
-            {/* MIDDLE COLUMN – Job Cards */}
+            {/* MIDDLE COLUMN */}
             <div
-                className="flex flex-col flex-grow overflow-y-auto p-4 border-r border-slate-300"
-                style={{ width: "40%" }}
+                className={`flex flex-col flex-grow overflow-y-auto p-4 border-r border-slate-300 ${
+                    showCharter ? "w-[40%]" : "w-[70%]"
+                }`}
             >
                 <h2 className="text-xl font-bold text-[#074797] mb-3">
                     Job Vacancies
@@ -170,7 +175,13 @@ export default function VacancySearch({ vacancies, search, activities }) {
                             <p>No vacancies found.</p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div
+                            className={`grid gap-4 ${
+                                showCharter
+                                    ? "grid-cols-1 sm:grid-cols-2" // With charter = 2 columns
+                                    : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" // Without = 3 columns
+                            }`}
+                        >
                             {vacancies.map((vacancy) => (
                                 <div
                                     key={vacancy.id}
@@ -222,21 +233,23 @@ export default function VacancySearch({ vacancies, search, activities }) {
                 </div>
             </div>
 
-            {/* RIGHT COLUMN  */}
-            <div
-                className="flex flex-col flex-shrink-0 border-l border-slate-300 p-4"
-                style={{ width: "30%" }}
-            >
-                <h2 className="text-xl font-bold mb-2 text-[#074797]">
-                    Citizens Charter
-                </h2>
-                <embed
-                    src="/files/Citizens-charter2k25.pdf"
-                    type="application/pdf"
-                    className="w-full h-[90vh] rounded border"
-                    title="Charter PDF"
-                />
-            </div>
+            {/* RIGHT COLUMN */}
+            {showCharter && (
+                <div
+                    className="flex flex-col flex-shrink-0 border-l border-slate-300 p-4"
+                    style={{ width: "30%" }}
+                >
+                    <h2 className="text-xl font-bold mb-2 text-[#074797]">
+                        Citizens Charter
+                    </h2>
+                    <embed
+                        src="/files/Citizens-charter2k25.pdf"
+                        type="application/pdf"
+                        className="w-full h-[90vh] rounded border"
+                        title="Charter PDF"
+                    />
+                </div>
+            )}
 
             <VacancyModal
                 showQR={showQR}

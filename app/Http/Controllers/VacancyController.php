@@ -12,6 +12,8 @@ class VacancyController extends Controller
 {
     public function index(Request $request)
     {
+
+        $showCharter = $request->routeIs('vacancies.withcharter');
         $search = $request->input('search');
         $specializationsFilter = (array) $request->input('specializations', []);
         $jobType = $request->input('job_type');
@@ -95,7 +97,7 @@ class VacancyController extends Controller
                 if ($days) $q->where('created_at', '>=', now()->subDays($days));
             })
             ->orderBy('created_at', 'desc')
-            ->limit(12)
+            ->limit(18)
             ->get();
 
         return Inertia::render('VacancySearch', [
@@ -110,6 +112,7 @@ class VacancyController extends Controller
                 'posted_date' => $postedDate,
             ],
             'specializations' => $specializations,
+            'showCharter'  => $showCharter,
         ]);
     }
 }
