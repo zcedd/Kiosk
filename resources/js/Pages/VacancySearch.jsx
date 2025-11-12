@@ -178,8 +178,8 @@ export default function VacancySearch({ vacancies, activities }) {
                         <div
                             className={`grid gap-4 ${
                                 showCharter
-                                    ? "grid-cols-1 sm:grid-cols-2" // With charter = 2 columns
-                                    : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" // Without = 3 columns
+                                    ? "grid-cols-1 sm:grid-cols-2"
+                                    : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
                             }`}
                         >
                             {vacancies.map((vacancy) => (
